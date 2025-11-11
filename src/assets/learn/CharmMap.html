@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>A3横向线性表全景图谱</title>
+    <style>
+        /* A3横向尺寸 */
+        @page {
+            size: 420mm 297mm;
+            margin: 0;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f5f7fa;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
+        }
+        .a3-landscape {
+            width: 420mm;
+            height: 297mm;
+            margin: 0 auto;
+            background: #ffffff;
+            box-shadow: 0 0 12px rgba(0,0,0,.15);
+            display: flex;
+            flex-direction: column;
+            padding: 10mm;
+            box-sizing: border-box;
+        }
+        @media print {
+            body { background: none; }
+            .a3-landscape { box-shadow: none; }
+        }
+
+        /* 全局字体控制 */
+        .main-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+            font-size: 9pt;
+            line-height: 1.25;
+        }
+        th, td {
+            border: 1px solid #d0d8e8;
+            padding: 3px 4px;
+            vertical-align: top;
+            text-align: left;
+            word-break: break-all;
+        }
+        th {
+            background: #e9eff7;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        /* 代码块样式 */
+        pre {
+            margin: 0;
+            font-family: "Consolas", monospace;
+            font-size: 8pt;
+            white-space: pre-wrap;
+            color: #111827;
+        }
+        .kw { color: #2563eb; font-weight: 600; }
+        .cm { color: #6b7280; }
+
+        /* 可视化图样式 */
+        .viz-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 4px 0;
+        }
+        .viz-box {
+            width: 32px;
+            height: 20px;
+            border: 1px solid #3b82f6;
+            background: #dbeafe;
+            text-align: center;
+            line-height: 20px;
+            font-size: 7pt;
+            color: #1e40af;
+        }
+        .arrow {
+            width: 24px;
+            height: 2px;
+            background: #3b82f6;
+            position: relative;
+        }
+        .arrow::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -3px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid #3b82f6;
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+        }
+        .dbl-arrow {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .dbl-arrow .arrow {
+            width: 20px;
+        }
+
+        /* 底部知识卡 */
+        .knowledge-bar {
+            margin-top: 6px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+            font-size: 8pt;
+        }
+        .k-card {
+            background: #f3f6fb;
+            border: 1px solid #c6d7f0;
+            border-radius: 4px;
+            padding: 4px 6px;
+        }
+        .k-card h5 {
+            margin: 0 0 3px 0;
+            font-size: 9pt;
+            color: #1e40af;
+        }
+        .k-card ul {
+            margin: 0;
+            padding-left: 12px;
+        }
+    </style>
+</head>
+<body>
+<div class="a3-landscape">
+    <div style="text-align:center; font-size:14pt; font-weight:700; color:#1e3a8a; margin-bottom:6px;">线性表知识体系全景图谱（A3横向）</div>
+
+    <table class="main-table">
+        <colgroup>
+            <col style="width:13%;">
+            <col style="width:14.5%;">
+            <col style="width:14.5%;">
+            <col style="width:14.5%;">
+            <col style="width:14.5%;">
+            <col style="width:14.5%;">
+            <col style="width:14.5%;">
+        </colgroup>
+        <thead>
+            <tr>
+                <th>结构/操作</th>
+                <th>顺序表（静态）</th>
+                <th>顺序表（动态）</th>
+                <th>链表（不带头）</th>
+                <th>链表（带头）</th>
+                <th>静态链表</th>
+                <th>双向循环链表</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 1 结构体 -->
+            <tr>
+                <td><b>结构体定义</b></td>
+                <td><pre><span class="kw">#define</span> MAXSIZE 100
+<span class="kw">typedef struct</span>{
+    ElemType data[MAXSIZE];
+    <span class="kw">int</span> length;
+}SqList;</pre></td>
+                <td><pre><span class="kw">typedef struct</span>{
+    ElemType *data;
+    <span class="kw">int</span> length, listsize;
+}SqList;</pre></td>
+                <td><pre><span class="kw">typedef struct</span> LNode{
+    ElemType data;
+    <span class="kw">struct</span> LNode *next;
+}LNode,*LinkList;</pre></td>
+                <td><pre>同左（带头结点）</pre></td>
+                <td><pre><span class="kw">#define</span> MAXSIZE 100
+<span class="kw">typedef struct</span>{
+    ElemType data;
+    <span class="kw">int</span> cur;
+}component,SLinkList[MAXSIZE];</pre></td>
+                <td><pre><span class="kw">typedef struct</span> DuLNode{
+    ElemType data;
+    <span class="kw">struct</span> DuLNode *prior,*next;
+}DuLNode,*DuLinkList;</pre></td>
+            </tr>
+
+            <!-- 2 InitList -->
+            <tr>
+                <td><b>InitList</b></td>
+                <td><pre>L.length=0;</pre></td>
+                <td><pre>L.data=(ElemType*)malloc(
+    LIST_INIT_SIZE*sizeof(ElemType));
+L.length=0;
+L.listsize=LIST_INIT_SIZE;</pre></td>
+                <td><pre>L=NULL;</pre></td>
+                <td><pre>L=(LinkList)malloc(sizeof(LNode));
+L-&gt;next=NULL;</pre></td>
+                <td><pre><span class="cm">// 备用链初始化</span>
+<span class="kw">for</span>(i=0;i&lt;MAXSIZE-1;i++)
+    space[i].cur=i+1;
+space[MAXSIZE-1].cur=0;</pre></td>
+                <td><pre>L=(DuLinkList)malloc(sizeof(DuLNode));
+L-&gt;prior=L-&gt;next=L;</pre></td>
+            </tr>
+
+            <!-- 3 可视化：插入/删除/头结点/前后继 -->
+            <tr>
+                <td><b>可视化核心操作</b></td>
+                <td colspan="2">
+                    <div style="font-size:8pt;color:#6b7280;">连续内存，随机访问O(1)</div>
+                    <div class="viz-row">
+                        <div class="viz-box">a<sub>0</sub></div>
+                        <div class="viz-box">a<sub>1</sub></div>
+                        <div class="viz-box">···</div>
+                        <div class="viz-box">a<sub>n-1</sub></div>
+                    </div>
+                    <div style="margin-top:4px;font-size:7pt;">插入/删除需移动元素</div>
+                </td>
+                <td>
+                    <div style="font-size:8pt;color:#6b7280;">不带头结点，头插特殊处理</div>
+                    <div class="viz-row">
+                        <div class="viz-box">head</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">A</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">B</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">∧</div>
+                    </div>
+                    <div style="margin-top:4px;font-size:7pt;">插入：s-&gt;next=p-&gt;next; p-&gt;next=s;</div>
+                </td>
+                <td>
+                    <div style="font-size:8pt;color:#6b7280;">带头结点，算法统一</div>
+                    <div class="viz-row">
+                        <div class="viz-box">head</div>
+                        <div class="viz-box" style="background:#fef3c7;">哨兵</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">A</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">B</div>
+                        <div class="arrow"></div>
+                        <div class="viz-box">∧</div>
+                    </div>
+                    <div style="margin-top:4px;font-size:7pt;">删除：q=p-&gt;next; p-&gt;next=q-&gt;next; free(q);</div>
+                </td>
+                <td>
+                    <div style="font-size:8pt;color:#6b7280;">游标模拟指针</div>
+                    <div class="viz-row">
+                        <div class="viz-box">下标</div>
+                        <div class="viz-box">0</div>
+                        <div class="viz-box">1</div>
+                        <div class="viz-box">2</div>
+                        <div class="viz-box">···</div>
+                    </div>
+                    <div style="margin-top:4px;font-size:7pt;">data + cur 组成静态节点</div>
+                </td>
+                <td>
+                    <div style="font-size:8pt;color:#6b7280;">双向循环，前后继O(1)</div>
+                    <div class="viz-row">
+                        <div class="dbl-arrow">
+                            <div class="arrow"></div>
+                            <div class="viz-box">head</div>
+                            <div class="arrow"></div>
+                        </div>
+                        <div class="dbl-arrow">
+                            <div class="arrow"></div>
+                            <div class="viz-box">A</div>
+                            <div class="arrow"></div>
+                        </div>
+                        <div class="dbl-arrow">
+                            <div class="arrow"></div>
+                            <div class="viz-box">B</div>
+                            <div class="arrow"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top:4px;font-size:7pt;">p-&gt;prior-&gt;next=p-&gt;next; p-&gt;next-&gt;prior=p-&gt;prior;</div>
+                </td>
+            </tr>
+
+            <!-- 4 ListEmpty -->
+            <tr>
+                <td><b>ListEmpty</b></td>
+                <td><pre><span class="kw">return</span> L.length==0;</pre></td>
+                <td><pre><span class="kw">return</span> L.length==0;</pre></td>
+                <td><pre><span class="kw">return</span> L==NULL;</pre></td>
+                <td><pre><span class="kw">return</span> L-&gt;next==NULL;</pre></td>
+                <td><pre><span class="kw">return</span> S[0].cur==0;</pre></td>
+                <td><pre><span class="kw">return</span> L-&gt;next==L;</pre></td>
+            </tr>
+
+            <!-- 5 ListLength -->
+            <tr>
+                <td><b>ListLength</b></td>
+                <td><pre><span class="kw">return</span> L.length;</pre></td>
+                <td><pre><span class="kw">return</span> L.length;</pre></td>
+                <td><pre><span class="kw">int</span> len=0;
+<span class="kw">for</span>(LinkList p=L;p;p=p-&gt;next)len++;
+<span class="kw">return</span> len;</pre></td>
+                <td><pre><span class="kw">int</span> len=0;
+<span class="kw">for</span>(LinkList p=L-&gt;next;p;p=p-&gt;next)len++;
+<span class="kw">return</span> len;</pre></td>
+                <td><pre><span class="kw">int</span> k=S[0].cur,len=0;
+<span class="kw">while</span>(k){len++;k=S[k].cur;}
+<span class="kw">return</span> len;</pre></td>
+                <td><pre><span class="kw">int</span> len=0;
+<span class="kw">for</span>(DuLinkList p=L-&gt;next;p!=L;p=p-&gt;next)len++;
+<span class="kw">return</span> len;</pre></td>
+            </tr>
+
+            <!-- 6 GetElement -->
+            <tr>
+                <td><b>GetElement</b></td>
+                <td><pre><span class="kw">if</span>(i&lt;1||i&gt;L.length)<span class="kw">return</span> ERROR;
+e=L.data[i-1];</pre></td>
+                <td><pre><span class="kw">if</span>(i&lt;1||i&gt;L.length)<span class="kw">return</span> ERROR;
+e=L.data[i-1];</pre></td>
+                <td><pre>LinkList p=L; <span class="kw">int</span> j=1;
+<span class="kw">while</span>(p&amp;&amp;j&lt;i){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p||j&gt;i)<span class="kw">return</span> ERROR;
+e=p-&gt;data;</pre></td>
+                <td><pre>LinkList p=L-&gt;next; <span class="kw">int</span> j=1;
+<span class="kw">while</span>(p&amp;&amp;j&lt;i){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p||j&gt;i)<span class="kw">return</span> ERROR;
+e=p-&gt;data;</pre></td>
+                <td><pre><span class="kw">int</span> k=S[0].cur,j=1;
+<span class="kw">while</span>(k&amp;&amp;j&lt;i){k=S[k].cur;j++;}
+<span class="kw">if</span>(!k||j&gt;i)<span class="kw">return</span> ERROR;
+e=S[k].data;</pre></td>
+                <td><pre>DuLinkList p=L-&gt;next; <span class="kw">int</span> j=1;
+<span class="kw">while</span>(p!=L&amp;&amp;j&lt;i){p=p-&gt;next;j++;}
+<span class="kw">if</span>(p==L||j&gt;i)<span class="kw">return</span> ERROR;
+e=p-&gt;data;</pre></td>
+            </tr>
+
+            <!-- 7 Locate / Next / Prior -->
+            <tr>
+                <td><b>Locate Next Prior</b></td>
+                <td><pre><span class="kw">for</span>(i=0;i&lt;L.length;i++)
+<span class="kw">if</span>(L.data[i]==e)<span class="kw">return</span> i+1;
+<span class="kw">return</span> 0;</pre></td>
+                <td><pre>同左</pre></td>
+                <td><pre><span class="kw">int</span> i=1;
+<span class="kw">for</span>(LinkList p=L;p;p=p-&gt;next,i++)
+<span class="kw">if</span>(p-&gt;data==e)<span class="kw">return</span> i;
+<span class="kw">return</span> 0;</pre></td>
+                <td><pre><span class="kw">int</span> i=1;
+<span class="kw">for</span>(LinkList p=L-&gt;next;p;p=p-&gt;next,i++)
+<span class="kw">if</span>(p-&gt;data==e)<span class="kw">return</span> i;
+<span class="kw">return</span> 0;</pre></td>
+                <td><pre><span class="kw">int</span> k=S[0].cur,j=1;
+<span class="kw">while</span>(k&amp;&amp;S[k].data!=e)
+{k=S[k].cur;j++;}
+<span class="kw">return</span> k?j:0;</pre></td>
+                <td><pre>DuLinkList p=L-&gt;next;
+<span class="kw">while</span>(p!=L&amp;&amp;p-&gt;data!=cur_e)
+p=p-&gt;next;
+<span class="kw">if</span>(p==L)<span class="kw">return</span> ERROR;
+pre_e=p-&gt;prior-&gt;data;</pre></td>
+            </tr>
+
+            <!-- 8 Insert -->
+            <tr>
+                <td><b>ListInsert</b></td>
+                <td><pre><span class="kw">if</span>(L.length&gt;=MAXSIZE)<span class="kw">return</span> ERROR;
+<span class="kw">if</span>(i&lt;1||i&gt;L.length+1)<span class="kw">return</span> ERROR;
+<span class="kw">for</span>(j=L.length;j&gt;=i;j--)
+L.data[j]=L.data[j-1];
+L.data[i-1]=e;
+L.length++;</pre></td>
+                <td><pre><span class="kw">if</span>(i&lt;1||i&gt;L.length+1)<span class="kw">return</span> ERROR;
+<span class="kw">if</span>(L.length&gt;=L.listsize){
+    newbase=realloc(L.data,
+    (L.listsize+LISTINCREMENT)*sizeof(ElemType));
+    L.data=newbase;
+    L.listsize+=LISTINCREMENT;
+}
+<span class="cm">/* 后续同静态 */</span></pre></td>
+                <td><pre><span class="cm">// i=1 特殊处理</span>
+<span class="kw">if</span>(i==1){s=(LinkList)malloc(sizeof(LNode));
+s-&gt;data=e;s-&gt;next=L;L=s;<span class="kw">return</span> OK;}
+p=L;j=1;
+<span class="kw">while</span>(p-&gt;next&amp;&amp;j&lt;i-1){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p-&gt;next||j&gt;i-1)<span class="kw">return</span> ERROR;
+s=(LinkList)malloc(sizeof(LNode));
+s-&gt;data=e;s-&gt;next=p-&gt;next;p-&gt;next=s;</pre></td>
+                <td><pre>p=L;j=0;
+<span class="kw">while</span>(p-&gt;next&amp;&amp;j&lt;i-1){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p-&gt;next||j&gt;i-1)<span class="kw">return</span> ERROR;
+s=(LinkList)malloc(sizeof(LNode));
+s-&gt;data=e;s-&gt;next=p-&gt;next;p-&gt;next=s;</pre></td>
+                <td><pre>j=Malloc_SSL(S);
+<span class="kw">if</span>(!j)<span class="kw">return</span> ERROR;
+S[j].data=e;
+k=MAXSIZE-1;
+<span class="kw">for</span>(l=1;l&lt;i;l++)k=S[k].cur;
+S[j].cur=S[k].cur;S[k].cur=j;</pre></td>
+                <td><pre>p=L;j=0;
+<span class="kw">while</span>(p-&gt;next!=L&amp;&amp;j&lt;i-1)
+{p=p-&gt;next;j++;}
+<span class="kw">if</span>(j&gt;i-1)<span class="kw">return</span> ERROR;
+s=(DuLinkList)malloc(sizeof(DuLNode));
+s-&gt;data=e;
+s-&gt;prior=p;s-&gt;next=p-&gt;next;
+p-&gt;next-&gt;prior=s;p-&gt;next=s;</pre></td>
+            </tr>
+
+            <!-- 9 Delete -->
+            <tr>
+                <td><b>ListDelete</b></td>
+                <td><pre><span class="kw">if</span>(i&lt;1||i&gt;L.length)<span class="kw">return</span> ERROR;
+e=L.data[i-1];
+<span class="kw">for</span>(j=i;j&lt;L.length;j++)
+L.data[j-1]=L.data[j];
+L.length--;</pre></td>
+                <td><pre>同左</pre></td>
+                <td><pre><span class="cm">// i=1 特殊处理</span>
+<span class="kw">if</span>(i==1){p=L;L=L-&gt;next;e=p-&gt;data;
+free(p);<span class="kw">return</span> OK;}
+p=L;j=1;
+<span class="kw">while</span>(p-&gt;next&amp;&amp;j&lt;i-1){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p-&gt;next||j&gt;i-1)<span class="kw">return</span> ERROR;
+q=p-&gt;next;p-&gt;next=q-&gt;next;e=q-&gt;data;
+free(q);</pre></td>
+                <td><pre>p=L;j=0;
+<span class="kw">while</span>(p-&gt;next&amp;&amp;j&lt;i-1){p=p-&gt;next;j++;}
+<span class="kw">if</span>(!p-&gt;next||j&gt;i-1)<span class="kw">return</span> ERROR;
+q=p-&gt;next;p-&gt;next=q-&gt;next;e=q-&gt;data;
+free(q);</pre></td>
+                <td><pre>k=MAXSIZE-1;
+<span class="kw">for</span>(j=1;j&lt;i;j++)k=S[k].cur;
+j=S[k].cur;
+S[k].cur=S[j].cur;
+e=S[j].data;
+Free_SSL(S,j);</pre></td>
+                <td><pre>p=L-&gt;next;j=1;
+<span class="kw">while</span>(p!=L&amp;&amp;j&lt;i){p=p-&gt;next;j++;}
+<span class="kw">if</span>(p==L||j&gt;i)<span class="kw">return</span> ERROR;
+p-&gt;prior-&gt;next=p-&gt;next;
+p-&gt;next-&gt;prior=p-&gt;prior;
+e=p-&gt;data;free(p);</pre></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 底部知识卡 -->
+    <div class="knowledge-bar">
+        <div class="k-card">
+            <h5>时间复杂度速查</h5>
+            <ul>
+                <li>随机访问：顺序表 O(1) ✔</li>
+                <li>插入/删除：链表 O(1) ✔</li>
+                <li>按值查找：均为 O(n)</li>
+            </ul>
+        </div>
+        <div class="k-card">
+            <h5>空间对比</h5>
+            <ul>
+                <li>顺序表：连续内存，可能碎片</li>
+                <li>链表：指针开销，利用率高</li>
+                <li>静态链表：无指针语言适用</li>
+            </ul>
+        </div>
+        <div class="k-card">
+            <h5>易错警示</h5>
+            <ul>
+                <li>带头与不带头算法差异</li>
+                <li>边界：空表、首/尾节点</li>
+                <li>内存：链表删除后及时free</li>
+            </ul>
+        </div>
+        <div class="k-card">
+            <h5>适用场景</h5>
+            <ul>
+                <li>频繁随机访问 → 顺序表</li>
+                <li>频繁插入删除 → 链表</li>
+                <li>数据量变化大 → 动态链表</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

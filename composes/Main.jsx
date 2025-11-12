@@ -4,6 +4,8 @@ import ClaudeRecipe from "./ClaudeRecipe"
 
 export default function Main(){
     const [ingredients,setIngredients] = React.useState([])
+    const [recipe,setRecipe] = React.useState("")
+    const recipeSection = React.useRef(null)
 
     function submitLog(event){
         event.preventDefault();
@@ -13,7 +15,10 @@ export default function Main(){
         event.currentTarget.reset() // 清空输入框
     }
 
-    const [recipe,setRecipe] = React.useState("")
+    React.useEffect(function(){
+        if(recipe !== "" && recipeSection.current !== null)
+            recipeSection.current.scrollIntoView({behavior:"smooth"})
+    },[recipe])
 
     async function getRecipe() {
         // ✅ 改为调用后端 API，而不是 import 函数
@@ -42,7 +47,7 @@ export default function Main(){
                 />
                 <button>+ Add ingredient</button>
             </form>
-            {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe} />}
+            {ingredients.length > 0 && <IngredientsList ingredients={ingredients} getRecipe={getRecipe}  ref={recipeSection} />}
             {recipe && <ClaudeRecipe recipe={recipe} />}
         </main>
     )
